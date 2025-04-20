@@ -54,36 +54,30 @@ export const usePoke = () => {
 
     try {
       const offset = (page - 1) * itemsPerPage.value
-      const { data, error: fetchError } = await useFetch<PokemonResponse>(
+      const data = await $fetch<PokemonResponse>(
         `https://pokeapi.co/api/v2/pokemon?limit=${itemsPerPage.value}&offset=${offset}`
       )
 
-      if (fetchError.value) {
-        throw new Error(fetchError.value.message)
+      const newPokemons = data.results.map(pokemon => ({
+        ...pokemon,
+        isLoadingDetail: false
+      }))
+      
+      // If it's the first page, replace the list
+      // Otherwise, append to the existing list
+      if (page === 1) {
+        pokemons.value = newPokemons
+      } else {
+        pokemons.value = [...pokemons.value, ...newPokemons]
       }
 
-      if (data.value) {
-        const newPokemons = data.value.results.map(pokemon => ({
-          ...pokemon,
-          isLoadingDetail: false
-        }))
-        
-        // If it's the first page, replace the list
-        // Otherwise, append to the existing list
-        if (page === 1) {
-          pokemons.value = newPokemons
-        } else {
-          pokemons.value = [...pokemons.value, ...newPokemons]
-        }
+      totalItems.value = data.count
+      totalPages.value = Math.ceil(data.count / itemsPerPage.value)
 
-        totalItems.value = data.value.count
-        totalPages.value = Math.ceil(data.value.count / itemsPerPage.value)
-
-        // Fetch details for all new Pokemon
-        newPokemons.forEach(async(pokemon) => {
-          fetchDetail(pokemon.name)
-        })
-      }
+      // Fetch details for all new Pokemon
+      newPokemons.forEach(async(pokemon) => {
+        fetchDetail(pokemon.name)
+      })
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to fetch pokemons'
     } finally {
@@ -103,21 +97,15 @@ export const usePoke = () => {
         pokemons.value[pokemonIndex].isLoadingDetail = true
       }
 
-      const { data, error: fetchError } = await useFetch<PokemonDetail>(
+      const data = await $fetch<PokemonDetail>(
         `https://pokeapi.co/api/v2/pokemon/${identifier}`
       )
 
-      if (fetchError.value) {
-        throw new Error(fetchError.value.message)
-      }
-
-      if (data.value) {
-        fetchedDetail.value = data.value;
-        
-        if (pokemonIndex !== -1) {
-          pokemons.value[pokemonIndex].isLoadingDetail = false
-          pokemons.value[pokemonIndex].detail = data.value
-        }
+      fetchedDetail.value = data;
+      
+      if (pokemonIndex !== -1) {
+        pokemons.value[pokemonIndex].isLoadingDetail = false
+        pokemons.value[pokemonIndex].detail = data
       }
     } catch (err) {
       console.error('Failed to fetch pokemon detail:', err);
