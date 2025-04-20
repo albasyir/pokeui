@@ -12,7 +12,8 @@ useHead({
   <v-app>
     <v-app-bar color="primary" density="compact">
       <template v-slot:prepend>
-        <v-btn icon="mdi-back" @click="$router.back"><</v-btn>
+        <v-btn icon="mdi-arrow-left" @click="$router.back">
+        </v-btn>
       </template>
 
       <template v-slot:append>

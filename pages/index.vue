@@ -54,8 +54,8 @@ import { getTypeColor } from '~/utils/poke/get-type-color';
 const poke = usePoke();
 useHead({ title: 'Dex' })
 
-useAsyncData(() => {
-  poke.fetchList(1);
+useAsyncData('pokemonPagination', () => {
+  return poke.fetchList(1);
 })
 
 const loadMore = async ({ done, side }) => {
