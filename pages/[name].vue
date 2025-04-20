@@ -69,7 +69,9 @@
                 <div class="about-value">{{ ((fetchedDetail?.weight || 0) / 10).toFixed(1) }}kg ({{ ((fetchedDetail?.weight || 0) * 0.2204).toFixed(1) }} lbs)</div>
 
                 <div class="about-label">Abilities</div>
-                <div class="about-value">Overgrow, Chlorophyl</div>
+                <div class="about-value">
+                  {{ fetchedDetail?.abilities.map(({ ability }) => ability.name.charAt(0).toUpperCase() + ability.name.slice(1)).join(", ") }}
+                </div>
 
                 <div class="about-section-title mt-6">Breeding</div>
 
