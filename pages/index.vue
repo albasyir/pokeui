@@ -46,6 +46,7 @@
 import { usePoke } from '~/stores/poke.store';
 
 const poke = usePoke();
+useHead({ title: 'Dex' })
 
 useAsyncData(() => {
   poke.fetchList(1);

@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { NuxtPage } from '#components';
 
+useHead({
+  titleTemplate: (title) => {
+    return title ? `${title} - Pokémon` : 'Pokémon';
+  }
+})
 </script>
 
 <template>
