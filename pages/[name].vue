@@ -3,7 +3,7 @@
     <!-- Colored top section -->
     <div 
       class="pokemon-header" 
-      :style="{ backgroundColor: getTypeColor(fetchedDetail?.types?.[0]?.type?.name || 'normal', true) }"
+      :style="{ backgroundColor: getTypeColor(fetchedDetail?.types?.[0]?.type?.name) }"
     >
       <!-- Row 1: Name, Elements, Number -->
       <div class="px-4 pt-4 d-flex justify-space-between align-center">
@@ -120,9 +120,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
 import { usePoke } from '~/stores/poke.store'
-import { useRoute } from 'vue-router'
+import { getTypeColor } from '~/utils/poke/get-type-color'
 
 const route = useRoute()
 const { fetchDetail, fetchedDetail } = usePoke()
@@ -134,32 +133,6 @@ useHead({ title: name })
 useAsyncData('pokemonDetail', async () => {
   return fetchDetail(name);
 })
-
-const getTypeColor = (type: string | undefined, isBackground = false): string => {
-  if (!type) return isBackground ? '#A8A878' : 'grey'
-  
-  const colors: Record<string, string> = {
-    normal: isBackground ? '#A8A878' : 'grey',
-    fire: isBackground ? '#F08030' : 'red',
-    water: isBackground ? '#6890F0' : 'blue',
-    electric: isBackground ? '#F8D030' : 'yellow',
-    grass: isBackground ? '#78C850' : 'green',
-    ice: isBackground ? '#98D8D8' : 'cyan',
-    fighting: isBackground ? '#C03028' : 'deep-orange',
-    poison: isBackground ? '#A040A0' : 'purple',
-    ground: isBackground ? '#E0C068' : 'brown',
-    flying: isBackground ? '#A890F0' : 'light-blue',
-    psychic: isBackground ? '#F85888' : 'pink',
-    bug: isBackground ? '#A8B820' : 'light-green',
-    rock: isBackground ? '#B8A038' : 'grey-darken-2',
-    ghost: isBackground ? '#705898' : 'deep-purple',
-    dragon: isBackground ? '#7038F8' : 'indigo',
-    dark: isBackground ? '#705848' : 'grey-darken-3',
-    steel: isBackground ? '#B8B8D0' : 'blue-grey',
-    fairy: isBackground ? '#EE99AC' : 'pink-lighten-3'
-  }
-  return colors[type] || (isBackground ? '#A8A878' : 'grey')
-}
 
 const getStatColor = (value: number): string => {
   if (value >= 100) return 'green'
@@ -177,14 +150,6 @@ const formatStatName = (name: string): string => {
 
 .pokemon-header {
   padding-bottom: 100px;
-  position: relative;
-}
-
-.white-background {
-  background: white;
-  min-height: 60vh;
-  margin-top: -80px;
-  border-radius: 30px 30px 0 0;
   position: relative;
 }
 

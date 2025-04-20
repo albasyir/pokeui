@@ -5,8 +5,8 @@
         <v-col v-for="pokemon in poke.pokemons.value" :key="pokemon.name" cols="12" sm="6" md="4" lg="3">
           <v-card 
             :to="`/${pokemon.name}`" 
-            :color="getPokemonColor(pokemon.detail?.types[0]?.type.name)" 
-            theme="dark" 
+            :color="getTypeColor(pokemon.detail?.types[0]?.type.name)" 
+            theme="dark"
             class="rounded-lg pa-4 text-white"
           >
             <div class="d-flex">
@@ -49,6 +49,7 @@
 
 <script setup>
 import { usePoke } from '~/stores/poke.store';
+import { getTypeColor } from '~/utils/poke/get-type-color';
 
 const poke = usePoke();
 useHead({ title: 'Dex' })
@@ -65,30 +66,6 @@ const loadMore = async ({ done, side }) => {
   }
   
   done('ok');
-};
-
-const getPokemonColor = (type) => {
-  const colors = {
-    'grass': '#78C850',
-    'fire': '#F08030',
-    'water': '#6890F0',
-    'electric': '#F8D030',
-    'poison': '#A040A0',
-    'flying': '#A890F0',
-    'normal': '#A8A878',
-    'fighting': '#C03028',
-    'psychic': '#F85888',
-    'ground': '#E0C068',
-    'rock': '#B8A038',
-    'bug': '#A8B820',
-    'ghost': '#705898',
-    'steel': '#B8B8D0',
-    'dragon': '#7038F8',
-    'dark': '#705848',
-    'fairy': '#EE99AC',
-    'ice': '#98D8D8'
-  };
-  return colors[type] || '#A8A878'; // Default color for unknown types
 };
 </script>
 
