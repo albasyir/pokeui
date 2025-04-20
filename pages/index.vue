@@ -3,7 +3,12 @@
     <v-infinite-scroll height="100%" side="end" @load="loadMore" :loading="poke.loading">
       <v-row>
         <v-col v-for="pokemon in poke.pokemons.value" :key="pokemon.name" cols="12" sm="6" md="4" lg="3">
-          <v-card :to="`/${pokemon.name}`" :color="getPokemonColor(pokemon.detail?.types[0]?.type.name)" theme="dark" class="rounded-lg pa-4">
+          <v-card 
+            :to="`/${pokemon.name}`" 
+            :color="getPokemonColor(pokemon.detail?.types[0]?.type.name)" 
+            theme="dark" 
+            class="rounded-lg pa-4 text-white"
+          >
             <div class="d-flex">
               <div class="flex-grow-1">
                 <v-card-title class="text-h5 pa-0 mb-2 text-capitalize">{{ pokemon.name }}</v-card-title>
@@ -13,7 +18,7 @@
                     <v-skeleton-loader type="chip" width="60" class="mr-1" />
                   </template>
                   <template v-else>
-                    <v-chip v-for="(type, index) in pokemon.detail?.types" :key="index" size="small" class="mr-1">
+                    <v-chip v-for="(type, index) in pokemon.detail?.types" :key="index" size="small" class="mr-1 text-capitalize">
                       {{ type.type.name }}
                     </v-chip>
                   </template>
@@ -62,7 +67,6 @@ const loadMore = async ({ done, side }) => {
   done('ok');
 };
 
-// Helper function for Pokemon color based on type
 const getPokemonColor = (type) => {
   const colors = {
     'grass': '#78C850',

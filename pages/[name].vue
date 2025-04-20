@@ -15,8 +15,7 @@
             <v-chip
               v-for="type in fetchedDetail?.types"
               :key="type.type.name"
-              :color="getTypeColor(type.type.name)"
-              class="text-capitalize"
+              class="text-capitalize text-white"
               variant="tonal"
               density="comfortable"
             >
@@ -132,9 +131,8 @@ const name = Array.isArray(route.params.name) ? route.params.name[0] : route.par
 
 useHead({ title: name })
 
-// Fetch pokemon details when component mounts
 useAsyncData('pokemonDetail', async () => {
-  await fetchDetail(name)
+  return fetchDetail(name);
 })
 
 const getTypeColor = (type: string | undefined, isBackground = false): string => {
