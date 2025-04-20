@@ -63,14 +63,18 @@
                 <div class="about-value text-capitalize">{{ name }}</div>
 
                 <div class="about-label">Height</div>
-                <div class="about-value">{{ ((fetchedDetail?.height || 0) / 10).toFixed(1) }}m ({{ ((fetchedDetail?.height || 0) * 3.937).toFixed(1) }}" )</div>
+                <div class="about-value">
+                  {{ formattedHeight }}
+                </div>
 
                 <div class="about-label">Weight</div>
-                <div class="about-value">{{ ((fetchedDetail?.weight || 0) / 10).toFixed(1) }}kg ({{ ((fetchedDetail?.weight || 0) * 0.2204).toFixed(1) }} lbs)</div>
+                <div class="about-value">
+                  {{ formattedWeight }}
+                </div>
 
                 <div class="about-label">Abilities</div>
                 <div class="about-value">
-                  {{ fetchedDetail?.abilities.map(({ ability }) => ability.name.charAt(0).toUpperCase() + ability.name.slice(1)).join(", ") }}
+                  {{ formattedAbilities }}
                 </div>
 
                 <div class="about-section-title mt-6">Breeding</div>
@@ -134,6 +138,26 @@ useHead({ title: name })
 
 useAsyncData('pokemonDetail', async () => {
   return fetchDetail(name);
+})
+
+const formattedHeight = computed(() => {
+  const height = fetchedDetail.value?.height || 0
+  const meters = (height / 10).toFixed(1)
+  const inches = (height * 3.937).toFixed(1)
+  return `${meters}m (${inches}")`
+})
+
+const formattedWeight = computed(() => {
+  const weight = fetchedDetail.value?.weight || 0
+  const kg = (weight / 10).toFixed(1)
+  const lbs = (weight * 0.2204).toFixed(1)
+  return `${kg}kg (${lbs} lbs)`
+})
+
+const formattedAbilities = computed(() => {
+  return fetchedDetail.value?.abilities
+    ?.map(({ ability }) => ability.name.charAt(0).toUpperCase() + ability.name.slice(1))
+    .join(", ") || ""
 })
 
 const getStatColor = (value: number): string => {
