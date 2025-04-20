@@ -1,6 +1,20 @@
 <template>
   <v-container>
-    <v-infinite-scroll height="100%" side="end" @load="loadMore" :loading="poke.loading">
+    <v-alert type="error" v-if='poke.error.value' :model-value='poke.error.value'>
+      <div class="d-flex justify-space-between align-center">
+        Something went wrong...
+        <v-btn
+          color="white"
+          size="small"
+          variant="outlined"
+          @click='poke.fetchList(1)'
+        >
+          Retry
+        </v-btn>
+      </div>
+    </v-alert>
+
+    <v-infinite-scroll v-else height="100%" side="end" @load="loadMore" :loading="poke.loading">
       <v-row>
         <v-col v-for="pokemon in poke.pokemons.value" :key="pokemon.name" cols="12" sm="6" md="4" lg="3">
           <v-card 
@@ -59,11 +73,13 @@ useAsyncData('pokemonPagination', () => {
 })
 
 const loadMore = async ({ done, side }) => {
-  if (side == 'start') {
-    await poke.previousPage();
-  } else {
-    await poke.nextPage();
-  }
+  const func = side == 'start' 
+    ? poke.previousPage
+    : poke.nextPage;
+
+  await func().catch(() => {
+    done('error');
+  });
   
   done('ok');
 };
